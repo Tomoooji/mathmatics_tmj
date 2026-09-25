@@ -1,10 +1,10 @@
 /**
  * @file Radian.h
- * @brief たぶんYAGNIだけど自己満なのでヨシ!
+ * @brief ちゃんとコンポジションにしたラジアンのクラス
  * 
  * @author Tomoooji (https://github.com/Tomoooji)
- * @version 0.1
- * @date 2026-09-21
+ * @version 1.0.0
+ * @date 2026-09-25
  * @copyright Copyright (c) 2026
  */
 #pragma once
@@ -14,124 +14,120 @@
 #endif
 
 template <typename T = float>
-class Radian2Pi : public T {
+class Radian2Pi {
+private:
+  T value;
 public:
 #if __cplusplus >= 202002L
-  static constexpr T PI = std::numbers::pi_v<T>;
-  static constexpr T TWO_PI = std::numbers::pi_v<T> * 2;
+  static constexpr T PI_FOR_RADIAN = std::numbers::pi_v<T>;
+  static constexpr T TWO_PI_FOR_RADIAN = std::numbers::pi_v<T> * 2;
 #else
-  static constexpr T PI = T(3.14159265358979323846);
-  static constexpr T TWO_PI = T(6.28318530717958647692);
+  static constexpr T PI_FOR_RADIAN = T(3.14159265358979323846);
+  static constexpr T TWO_PI_FOR_RADIAN = T(6.28318530717958647692);
 #endif
-  Radian2Pi(T rad = 0.0f) : T(rad) {}
-  Radian2Pi normalize() const {
-    T normalized = fmod(T(*this), TWO_PI);
+  constexpr Radian2Pi(T rad = 0.0f) : value(rad) {}
+  constexpr Radian2Pi normalize() const {
+    T normalized = fmod(this->value, TWO_PI_FOR_RADIAN);
     if (normalized < 0) {
-      normalized += TWO_PI;
+      normalized += TWO_PI_FOR_RADIAN;
     }
     return Radian2Pi(normalized);
   }
-  Radian2Pi operator+(const Radian2Pi &other) const {
-    return Radian2Pi(fmod(T(*this) + T(other), TWO_PI) + (T(*this) + T(other) < 0 ? TWO_PI : 0));
+  constexpr Radian2Pi operator+(const Radian2Pi &other) const {
+    return Radian2Pi(this->value + other.value).normalize();
   }
-  Radian2Pi operator-(const Radian2Pi &other) const {
-    return Radian2Pi(fmod(T(*this) - T(other), TWO_PI) + (T(*this) - T(other) < 0 ? TWO_PI : 0));
+  constexpr Radian2Pi operator-(const Radian2Pi &other) const {
+    return Radian2Pi(this->value - other.value).normalize();
   }
-  Radian2Pi operator*(T scalar) const {
-    return Radian2Pi(fmod(T(*this) * scalar, TWO_PI) + (T(*this) * scalar < 0 ? TWO_PI : 0));
+  constexpr Radian2Pi operator*(T scalar) const {
+    return Radian2Pi(this->value * scalar).normalize();
   }
-  Radian2Pi operator/(T scalar) const {
-    return Radian2Pi(fmod(T(*this) / scalar, TWO_PI) + (T(*this) / scalar < 0 ? TWO_PI : 0));
+  constexpr Radian2Pi operator/(T scalar) const {
+    return Radian2Pi(this->value / scalar).normalize();
   }
-  Radian2Pi operator+=(const Radian2Pi &other) {
-    T::operator+=(T(other));
-    if (T(*this) < 0) {
-      T::operator+=(TWO_PI);
-    } else if (T(*this) >= TWO_PI) {
-      T::operator-=(TWO_PI);
-    }
-    return *this;
+  constexpr Radian2Pi operator+=(const Radian2Pi &other) {
+    this->value += other.value;
+    return *this->normalize();
   }
-  Radian2Pi operator-=(const Radian2Pi &other) {
-    T::operator-=(T(other));
-    if (T(*this) < 0) {
-      T::operator+=(TWO_PI);
-    } else if (T(*this) >= TWO_PI) {
-      T::operator-=(TWO_PI);
-    }
-    return *this;
+  constexpr Radian2Pi operator-=(const Radian2Pi &other) {
+    this->value -= other.value;
+    return *this->normalize();
   }
-  Radian2Pi operator*=(T scalar) {
-    T::operator*=(scalar);
-    if (T(*this) < 0) {
-      T::operator+=(TWO_PI);
-    } else if (T(*this) >= TWO_PI) {
-      T::operator-=(TWO_PI);
-    }
-    return *this;
+  constexpr Radian2Pi operator*=(T scalar) {
+    this->value *= scalar;
+    return *this->normalize();
   }
-  Radian2Pi operator/=(T scalar) {
-    T::operator/=(scalar);
-    if (T(*this) < 0) {
-      T::operator+=(TWO_PI);
-    } else if (T(*this) >= TWO_PI) {
-      T::operator-=(TWO_PI);
-    }
-    return *this;
+  constexpr Radian2Pi operator/=(T scalar) {
+    this->value /= scalar;
+    return *this->normalize();
   }
+  constexpr auto operator<=>(const Radian2Pi &other) const {
+    return this->value <=> other.value;
+  }
+  constexpr auto operator<=>(const T &other) const {
+    return this->value <=> other;
+  }
+  constexpr operator T() const {
+    return this->value;
+  }
+  /*constexpr operator const T&() const {
+    return this->value;
+  }*/
 };
 
 template <typename T = float>
-class RadianAbsPi : public T {
+class RadianAbsPi {
+private:
+  T value;
 public:
 #if __cplusplus >= 202002L
-  static constexpr T PI = std::numbers::pi_v<T>;
+  static constexpr T PI_FOR_RADIAN = std::numbers::pi_v<T>;
 #else
-  static constexpr T PI = T(3.14159265358979323846);
+  static constexpr T PI_FOR_RADIAN = T(3.14159265358979323846);
 #endif
-  RadianAbsPi(T rad = 0.0f) : T(rad) {}
-  RadianAbsPi normalize() const {
-    T normalized = fmod(T(*this) + PI, 2 * PI) - PI;
+  constexpr RadianAbsPi(T rad = 0.0f) : value(rad) {}
+  constexpr RadianAbsPi normalize() const {
+    T normalized = fmod(this->value + PI_FOR_RADIAN, 2 * PI_FOR_RADIAN) - PI_FOR_RADIAN;
     return RadianAbsPi(normalized);
   }
-  RadianAbsPi operator+(const RadianAbsPi &other) const {
-    return RadianAbsPi(fmod(T(*this) + T(other) + PI, 2 * PI) - PI);
+  constexpr RadianAbsPi operator+(const RadianAbsPi &other) const {
+    return RadianAbsPi(this->value + other.value).normalize();
   }
-  RadianAbsPi operator-(const RadianAbsPi &other) const {
-    return RadianAbsPi(fmod(T(*this) - T(other) + PI, 2 * PI) - PI);
+  constexpr RadianAbsPi operator-(const RadianAbsPi &other) const {
+    return RadianAbsPi(this->value - other.value).normalize();
   }
-  RadianAbsPi operator*(T scalar) const {
-    return RadianAbsPi(fmod(T(*this) * scalar + PI, 2 * PI) - PI);
+  constexpr RadianAbsPi operator*(T scalar) const {
+    return RadianAbsPi(this->value * scalar).normalize();
   }
-  RadianAbsPi operator/(T scalar) const {
-    return RadianAbsPi(fmod(T(*this) / scalar + PI, 2 * PI) - PI);
+  constexpr RadianAbsPi operator/(T scalar) const {
+    return RadianAbsPi(this->value / scalar).normalize();
   }
-  RadianAbsPi operator+=(const RadianAbsPi &other) {
-    T::operator+=(T(other));
-    T::operator-=(PI);
-    T::operator-=(floor(T(*this) / (2 * PI)) * (2 * PI));
-    T::operator+=(PI);
-    return *this;
+  constexpr RadianAbsPi operator+=(const RadianAbsPi &other) {
+    this->value += other.value;
+    return *this->normalize();
   }
-  RadianAbsPi operator-=(const RadianAbsPi &other) {
-    T::operator-=(T(other));
-    T::operator-=(PI);
-    T::operator-=(floor(T(*this) / (2 * PI)) * (2 * PI));
-    T::operator+=(PI);
-    return *this;
+  constexpr RadianAbsPi operator-=(const RadianAbsPi &other) {
+    this->value -= other.value;
+    return *this->normalize();
   }
-  RadianAbsPi operator*=(T scalar) {
-    T::operator*=(scalar);
-    T::operator-=(PI);
-    T::operator-=(floor(T(*this) / (2 * PI)) * (2 * PI));
-    T::operator+=(PI);
-    return *this;
+  constexpr RadianAbsPi operator*=(T scalar) {
+    this->value *= scalar;
+    return *this->normalize();
   }
-  RadianAbsPi operator/=(T scalar) {
-    T::operator/=(scalar);
-    T::operator-=(PI);
-    T::operator-=(floor(T(*this) / (2 * PI)) * (2 * PI));
-    T::operator+=(PI);
-    return *this;
+  constexpr RadianAbsPi operator/=(T scalar) {
+    this->value /= scalar;
+    return *this->normalize();
   }
+  constexpr auto operator<=>(const RadianAbsPi &other) const {
+    return this->value <=> other.value;
+  }
+  constexpr auto operator<=>(const T &other) const {
+    return this->value <=> other;
+  }
+  constexpr operator T() const {
+    return this->value;
+  }
+  /*constexpr operator const T&() const {
+    return this->value;
+  }*/
 };
