@@ -4,7 +4,7 @@
  * 
  * @author Tomoooji (https://github.com/Tomoooji)
  * @version 1.0.0
- * @date 2026-09-25
+ * @date 2026-10-02
  * @copyright Copyright (c) 2026
  */
 #pragma once
@@ -12,6 +12,12 @@
 #if __cplusplus >= 202002L
 #include <numbers>
 #endif
+
+template <typename T>
+class Radian2Pi;
+
+template <typename T>
+class RadianAbsPi;
 
 template <typename T = float>
 class Radian2Pi {
@@ -73,6 +79,7 @@ public:
   /*constexpr operator const T&() const {
     return this->value;
   }*/
+  constexpr RadianAbsPi<T> toAbsPi() const;
 };
 
 template <typename T = float>
@@ -130,4 +137,15 @@ public:
   /*constexpr operator const T&() const {
     return this->value;
   }*/
+  constexpr Radian2Pi<T>  to2Pi() const;
 };
+
+template <typename T>
+constexpr RadianAbsPi<T> Radian2Pi<T>::toAbsPi() const {
+    return RadianAbsPi<T>(value);
+}
+
+template <typename T>
+constexpr Radian2Pi<T> RadianAbsPi<T>::to2Pi() const {
+    return Radian2Pi<T>(value);
+}
