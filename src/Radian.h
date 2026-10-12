@@ -34,7 +34,7 @@ public:
   constexpr Radian2Pi(T rad = 0.0f) : value(rad) {}
   constexpr Radian2Pi normalize() const {
     T normalized = fmod(this->value, TWO_PI_FOR_RADIAN_);
-    if (normalized < 0) {
+    while (normalized < 0) {
       normalized += TWO_PI_FOR_RADIAN_;
     }
     return Radian2Pi(normalized);
@@ -96,8 +96,11 @@ public:
 #endif
   constexpr RadianAbsPi(T rad = 0.0f) : value(rad) {}
   constexpr RadianAbsPi normalize() const {
-    T normalized = fmod(this->value + PI_FOR_RADIAN_, 2 * PI_FOR_RADIAN_) - PI_FOR_RADIAN_;
-    return RadianAbsPi(normalized);
+    T prenormalized = fmod(this->value + PI_FOR_RADIAN_, 2 * PI_FOR_RADIAN_);
+    while (prenormalized < 0) {
+      prenormalized += TWO_PI_FOR_RADIAN_;
+    }
+    return RadianAbsPi(prenormalized - PI_FOR_RADIAN_);
   }
   constexpr RadianAbsPi operator+(const RadianAbsPi &other) const {
     return RadianAbsPi(this->value + other.value).normalize();
