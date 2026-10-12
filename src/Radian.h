@@ -25,17 +25,17 @@ private:
   T value;
 public:
 #if __cplusplus >= 202002L
-  static constexpr T PI_FOR_RADIAN = std::numbers::pi_v<T>;
-  static constexpr T TWO_PI_FOR_RADIAN = std::numbers::pi_v<T> * 2;
+  static constexpr T PI_FOR_RADIAN_ = std::numbers::pi_v<T>;
+  static constexpr T TWO_PI_FOR_RADIAN_ = std::numbers::pi_v<T> * 2;
 #else
-  static constexpr T PI_FOR_RADIAN = T(3.14159265358979323846);
-  static constexpr T TWO_PI_FOR_RADIAN = T(6.28318530717958647692);
+  static constexpr T PI_FOR_RADIAN_ = T(3.14159265358979323846);
+  static constexpr T TWO_PI_FOR_RADIAN_ = T(6.28318530717958647692);
 #endif
   constexpr Radian2Pi(T rad = 0.0f) : value(rad) {}
   constexpr Radian2Pi normalize() const {
-    T normalized = fmod(this->value, TWO_PI_FOR_RADIAN);
+    T normalized = fmod(this->value, TWO_PI_FOR_RADIAN_);
     if (normalized < 0) {
-      normalized += TWO_PI_FOR_RADIAN;
+      normalized += TWO_PI_FOR_RADIAN_;
     }
     return Radian2Pi(normalized);
   }
@@ -88,13 +88,15 @@ private:
   T value;
 public:
 #if __cplusplus >= 202002L
-  static constexpr T PI_FOR_RADIAN = std::numbers::pi_v<T>;
+  static constexpr T PI_FOR_RADIAN_ = std::numbers::pi_v<T>;
+  static constexpr T TWO_PI_FOR_RADIAN_ = std::numbers::pi_v<T> * 2;
 #else
-  static constexpr T PI_FOR_RADIAN = T(3.14159265358979323846);
+  static constexpr T PI_FOR_RADIAN_ = T(3.14159265358979323846);
+  static constexpr T TWO_PI_FOR_RADIAN_ = T(6.28318530717958647692);
 #endif
   constexpr RadianAbsPi(T rad = 0.0f) : value(rad) {}
   constexpr RadianAbsPi normalize() const {
-    T normalized = fmod(this->value + PI_FOR_RADIAN, 2 * PI_FOR_RADIAN) - PI_FOR_RADIAN;
+    T normalized = fmod(this->value + PI_FOR_RADIAN_, 2 * PI_FOR_RADIAN_) - PI_FOR_RADIAN_;
     return RadianAbsPi(normalized);
   }
   constexpr RadianAbsPi operator+(const RadianAbsPi &other) const {
@@ -149,3 +151,6 @@ template <typename T>
 constexpr Radian2Pi<T> RadianAbsPi<T>::to2Pi() const {
     return Radian2Pi<T>(value);
 }
+
+constexpr Radian2Pi<float> PI_FOR_RADIAN = Radian2Pi<float>(Radian2Pi<float>::PI_FOR_RADIAN_);
+constexpr Radian2Pi<float> TWO_PI_FOR_RADIAN = Radian2Pi<float>(Radian2Pi<float>::TWO_PI_FOR_RADIAN_);
