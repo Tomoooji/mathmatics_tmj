@@ -67,12 +67,52 @@ public:
     this->value /= scalar;
     return *this->normalize();
   }
+#if __cplusplus >= 202002L
   constexpr auto operator<=>(const Radian2Pi &other) const {
     return this->value <=> other.value;
   }
   constexpr auto operator<=>(const T &other) const {
     return this->value <=> other;
   }
+#else
+  constexpr bool operator==(const Radian2Pi& other) const {
+    return value == other.value;
+  }
+  constexpr bool operator!=(const Radian2Pi& other) const {
+    return value != other.value;
+  }
+  constexpr bool operator<(const Radian2Pi& other) const {
+    return value < other.value;
+  }
+  constexpr bool operator<=(const Radian2Pi& other) const {
+    return value <= other.value;
+  }
+  constexpr bool operator>(const Radian2Pi& other) const {
+    return value > other.value;
+  }
+  constexpr bool operator>=(const Radian2Pi& other) const {
+    return value >= other.value;
+  }
+  constexpr bool operator==(const T& other) const {
+    return value == other;
+  }
+  constexpr bool operator!=(const T& other) const {
+    return value != other;
+  }
+  constexpr bool operator<(const T& other) const {
+    return value < other;
+  }
+  constexpr bool operator<=(const T& other) const {
+    return value <= other;
+  }
+  constexpr bool operator>(const T& other) const {
+    return value > other;
+  }
+  constexpr bool operator>=(const T& other) const {
+    return value >= other;
+  }
+#endif
+
   constexpr operator T() const {
     return this->value;
   }
@@ -130,12 +170,51 @@ public:
     this->value /= scalar;
     return *this->normalize();
   }
+#if __cplusplus >= 202002L
   constexpr auto operator<=>(const RadianAbsPi &other) const {
     return this->value <=> other.value;
   }
   constexpr auto operator<=>(const T &other) const {
     return this->value <=> other;
   }
+#else
+  constexpr bool operator==(const RadianAbsPi& other) const {
+    return value == other.value;
+  }
+  constexpr bool operator!=(const RadianAbsPi& other) const {
+    return value != other.value;
+  }
+  constexpr bool operator<(const RadianAbsPi& other) const {
+    return value < other.value;
+  }
+  constexpr bool operator<=(const RadianAbsPi& other) const {
+    return value <= other.value;
+  }
+  constexpr bool operator>(const RadianAbsPi& other) const {
+    return value > other.value;
+  }
+  constexpr bool operator>=(const RadianAbsPi& other) const {
+    return value >= other.value;
+  }
+  constexpr bool operator==(const T& other) const {
+    return value == other;
+  }
+  constexpr bool operator!=(const T& other) const {
+    return value != other;
+  }
+  constexpr bool operator<(const T& other) const {
+    return value < other;
+  }
+  constexpr bool operator<=(const T& other) const {
+    return value <= other;
+  }
+  constexpr bool operator>(const T& other) const {
+    return value > other;
+  }
+  constexpr bool operator>=(const T& other) const {
+    return value >= other;
+  }
+#endif
   constexpr operator T() const {
     return this->value;
   }
